@@ -40,21 +40,36 @@ function updateUI(user) {
 
 function openAuthModal() {
     modalAuth.style.display = 'block';
+    document.body.style.overflow = 'hidden'; // Прибираємо скролбар
 }
 
 function closeAuthModal() {
     modalAuth.style.display = 'none';
+    document.body.style.overflow = ''; // Повертаємо скролбар
     resetForm();
 }
 
 function updateButtonState() {
     const isLoginFilled = loginInput.value.trim() !== '';
     const isPasswordFilled = passwordInput.value.trim() !== '';
+    
     loginErrorText.style.display = isLoginFilled ? 'none' : 'block';
     passwordErrorText.style.display = isPasswordFilled ? 'none' : 'block';
-
+    
+    if (!isLoginFilled) {
+        loginInput.classList.add('input-error');
+    } else {
+        loginInput.classList.remove('input-error');
+    }
+    
+    if (!isPasswordFilled) {
+        passwordInput.classList.add('input-error');
+    } else {
+        passwordInput.classList.remove('input-error');
+    }
+    
     buttonLogin.disabled = !(isLoginFilled && isPasswordFilled);
-
+    
     authErrorText.style.display = 'none';
 }
 
@@ -65,6 +80,8 @@ function resetForm() {
     passwordErrorText.style.display = 'none';
     authErrorText.style.display = 'none';
     buttonLogin.disabled = true;
+    loginInput.classList.remove('input-error');
+    passwordInput.classList.remove('input-error');
 }
 
 logInForm.addEventListener('submit', function (event) {
@@ -90,6 +107,13 @@ passwordInput.addEventListener('input', updateButtonState);
 authButton.addEventListener('click', openAuthModal);
 
 closeAuthButton.addEventListener('click', closeAuthModal);
+
+// Закриття модального вікна при кліку поза його межами
+modalAuth.addEventListener('click', function(event) {
+    if (event.target === modalAuth) {
+        closeAuthModal();
+    }
+});
 
 outButton.addEventListener('click', function () {
     removeUser();
