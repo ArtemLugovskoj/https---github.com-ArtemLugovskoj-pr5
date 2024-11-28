@@ -11,6 +11,65 @@ const loginErrorText = document.getElementById('login-error');
 const passwordErrorText = document.getElementById('password-error');
 const authErrorText = document.getElementById('auth-error');
 
+const cardsRestaurants = document.querySelector('.cards-restaurants');
+
+const restaurantData = [
+    {
+        image: 'img/pizza-plus/preview.jpg',
+        title: 'Піца плюс',
+        time: '50 хвилин',
+        rating: '4.5',
+        price: 'від 200 &#8372;',
+        category: 'Піца',
+        link: 'restaurant.html'
+    },
+    {
+        image: 'img/tanuki/preview.jpg',
+        title: 'Танукі',
+        time: '60 хвилин',
+        rating: '4.5',
+        price: 'від 1 200 &#8372;',
+        category: 'Суші, роли',
+        link: 'restaurant.html'
+    },
+    {
+        image: 'img/food-band/preview.jpg',
+        title: 'FoodBand',
+        time: '40 хвилин',
+        rating: '4.5',
+        price: 'від 150 &#8372;',
+        category: 'Піца',
+        link: 'restaurant.html'
+    },
+    {
+        image: 'img/palki-skalki/preview.jpg',
+        title: 'Ikigai',
+        time: '55 хвилин',
+        rating: '4.5',
+        price: 'від 250 &#8372;',
+        category: 'Піца',
+        link: 'restaurant.html'
+    },
+    {
+        image: 'img/gusi-lebedi/preview.jpg',
+        title: 'Пузата хата',
+        time: '75 хвилин',
+        rating: '4.5',
+        price: 'від 300 &#8372;',
+        category: 'Українські страви',
+        link: 'restaurant.html'
+    },
+    {
+        image: 'img/pizza-burger/preview.jpg',
+        title: 'PizzaBurger',
+        time: '45 хвилин',
+        rating: '4.5',
+        price: 'від 700 &#8372;',
+        category: 'Піца',
+        link: 'restaurant.html'
+    }
+];
+
 function saveUser(user) {
     localStorage.setItem('user', JSON.stringify(user));
 }
@@ -40,12 +99,12 @@ function updateUI(user) {
 
 function openAuthModal() {
     modalAuth.style.display = 'block';
-    document.body.style.overflow = 'hidden'; // Прибираємо скролбар
+    document.body.style.overflow = 'hidden'; 
 }
 
 function closeAuthModal() {
     modalAuth.style.display = 'none';
-    document.body.style.overflow = ''; // Повертаємо скролбар
+    document.body.style.overflow = ''; 
     resetForm();
 }
 
@@ -84,6 +143,43 @@ function resetForm() {
     passwordInput.classList.remove('input-error');
 }
 
+function renderRestaurants() {
+    cardsRestaurants.innerHTML = '';
+
+    restaurantData.forEach(restaurant => {
+        const { image, title, time, rating, price, category, link } = restaurant;
+
+        const a = document.createElement('a');
+        a.href = link;
+        a.classList.add('card', 'card-restaurant');
+
+        a.innerHTML = `
+            <img src="${image}" alt="${title}" class="card-image" />
+            <div class="card-text">
+                <div class="card-heading">
+                    <h3 class="card-title">${title}</h3>
+                    <span class="card-tag tag">${time}</span>
+                </div>
+                <div class="card-info">
+                    <div class="rating">${rating}</div>
+                    <div class="price">${price}</div>
+                    <div class="category">${category}</div>
+                </div>
+            </div>
+        `;
+
+        a.addEventListener('click', function(event) {
+            const user = getUser();
+            if (!user) {
+                event.preventDefault(); 
+                openAuthModal(); 
+            }
+        });
+
+        cardsRestaurants.appendChild(a);
+    });
+}
+
 logInForm.addEventListener('submit', function (event) {
     event.preventDefault();
 
@@ -108,7 +204,6 @@ authButton.addEventListener('click', openAuthModal);
 
 closeAuthButton.addEventListener('click', closeAuthModal);
 
-// Закриття модального вікна при кліку поза його межами
 modalAuth.addEventListener('click', function(event) {
     if (event.target === modalAuth) {
         closeAuthModal();
@@ -126,4 +221,6 @@ document.addEventListener('DOMContentLoaded', function () {
     const user = getUser();
     updateUI(user);
     resetForm(); 
+
+    renderRestaurants();
 });
