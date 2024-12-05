@@ -70,6 +70,76 @@ const restaurantData = [
     }
 ];
 
+const sliderWrapper = document.getElementById('slider-wrapper');
+const sliderPrev = document.getElementById('slider-prev');
+const sliderNext = document.getElementById('slider-next');
+
+let currentSlide = 0;
+
+// Створення слайдів з масиву restaurantData
+function renderSliderCards() {
+  sliderWrapper.innerHTML = ''; // Очищуємо попередні слайди
+
+  restaurantData.forEach(({ image, title, time, rating, price, category, link }) => {
+    const slide = document.createElement('div');
+    slide.classList.add('slide');
+
+    slide.innerHTML = `
+      <a class="card" href="${link}">
+        <img src="${image}" alt="${title}" class="card-image" />
+        <div class="card-text">
+          <div class="card-heading">
+            <h3 class="card-title">${title}</h3>
+            <span class="card-tag tag">${time}</span>
+          </div>
+          <div class="card-info">
+            <div class="rating">${rating}</div>
+            <div class="price">${price}</div>
+            <div class="category">${category}</div>
+          </div>
+        </div>
+      </a>
+    `;
+
+    slide.addEventListener('click', function(event) {
+        const user = getUser();
+        if (!user) {
+            event.preventDefault(); 
+            openAuthModal(); 
+        }
+    });
+
+    sliderWrapper.appendChild(slide);
+  });
+
+  updateSlider();
+}
+
+// Оновлення відображення слайдів
+function updateSlider() {
+  const slides = document.querySelectorAll('.slide');
+  slides.forEach((slide, index) => {
+    slide.style.display = index === currentSlide ? 'block' : 'none';
+  });
+}
+
+// Кнопка "Назад"
+sliderPrev.addEventListener('click', () => {
+  currentSlide = (currentSlide - 1 + restaurantData.length) % restaurantData.length;
+  updateSlider();
+});
+
+// Кнопка "Вперед"
+sliderNext.addEventListener('click', () => {
+  currentSlide = (currentSlide + 1) % restaurantData.length;
+  updateSlider();
+});
+
+// Генерація слайдів при завантаженні сторінки
+document.addEventListener('DOMContentLoaded', () => {
+  renderSliderCards();
+});
+
 function saveUser(user) {
     localStorage.setItem('user', JSON.stringify(user));
 }
