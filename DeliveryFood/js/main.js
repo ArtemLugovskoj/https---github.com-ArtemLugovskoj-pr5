@@ -76,9 +76,8 @@ const sliderNext = document.getElementById('slider-next');
 
 let currentSlide = 0;
 
-// Створення слайдів з масиву restaurantData
 function renderSliderCards() {
-  sliderWrapper.innerHTML = ''; // Очищуємо попередні слайди
+  sliderWrapper.innerHTML = ''; 
 
   restaurantData.forEach(({ image, title, time, rating, price, category, link }) => {
     const slide = document.createElement('div');
@@ -115,7 +114,6 @@ function renderSliderCards() {
   updateSlider();
 }
 
-// Оновлення відображення слайдів
 function updateSlider() {
   const slides = document.querySelectorAll('.slide');
   slides.forEach((slide, index) => {
@@ -123,19 +121,16 @@ function updateSlider() {
   });
 }
 
-// Кнопка "Назад"
 sliderPrev.addEventListener('click', () => {
   currentSlide = (currentSlide - 1 + restaurantData.length) % restaurantData.length;
   updateSlider();
 });
 
-// Кнопка "Вперед"
 sliderNext.addEventListener('click', () => {
   currentSlide = (currentSlide + 1) % restaurantData.length;
   updateSlider();
 });
 
-// Генерація слайдів при завантаженні сторінки
 document.addEventListener('DOMContentLoaded', () => {
   renderSliderCards();
 });
